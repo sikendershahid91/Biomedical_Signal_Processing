@@ -49,10 +49,45 @@ for i=1:1:length(train_label)
     train_WaveletCoefficentMatrix_c4(i,6, :) = wrcoef('a',C,L,daubechies_WT,5); %DELTA
 end
 
-featuresMatrix_alpha_c3 = zeros(length(train_label), 6, length(train_set_c3));
-featuresMatrix_beta_c3 = zeros(length(train_label), 6, length(train_set_c3));
-featuresMatrix_alpha_c4 = zeros(length(train_label), 6, length(train_set_c4));
-featuresMatrix_beta_c4 = zeros(length(train_label), 6, length(train_set_c4));
+%Creating feature extraction matrix
+featuresMatrix_alpha_c3 = zeros(length(train_label), 6);
+featuresMatrix_beta_c3 = zeros(length(train_label), 6);
+featuresMatrix_alpha_c4 = zeros(length(train_label), 6);
+featuresMatrix_beta_c4 = zeros(length(train_label), 6);
+
+%RMS using y = rms(x, N)
+for i=1:1:length(train_label)
+  featuresMatrix_alpha_c3(i, 1) = rms(train_WaveletCoefficentMatrix_c3(i, 4, :));
+  featuresMatrix_beta_c3(i, 1) = rms(train_WaveletCoefficentMatrix_c3(i, 3, :));
+  featuresMatrix_alpha_c4(i, 1) = rms(train_WaveletCoefficentMatrix_c4(i, 4, :));
+  featuresMatrix_beta_c4(i, 1) = rms(train_WaveletCoefficentMatrix_c4(i, 3, :));
+end
+
+%using waveform length
+for i=1:1:length(train_label)
+  featuresMatrix_alpha_c3(i, 2) = WaveformLength(train_WaveletCoefficentMatrix_c3(i,4, :));
+  featuresMatrix_beta_c3(i, 2) = WaveformLength(train_WaveletCoefficentMatrix_c3(i,3, :));
+  featuresMatrix_alpha_c4(i, 2) = WaveformLength(train_WaveletCoefficentMatrix_c4(i,4, :));
+  featuresMatrix_beta_c4(i, 2) = WaveformLength(train_WaveletCoefficentMatrix_c4(i,3, :));
+end
+
+%using ModifiedMeanAbsValue2
+for i=1:1:length(train_label)
+  featuresMatrix_alpha_c3(i, 3) = ModifiedMeanAbsValue2(train_WaveletCoefficentMatrix_c3(i,4, :));
+  featuresMatrix_beta_c3(i, 3) = ModifiedMeanAbsValue2(train_WaveletCoefficentMatrix_c3(i,3, :));
+  featuresMatrix_alpha_c4(i, 3) = ModifiedMeanAbsValue2(train_WaveletCoefficentMatrix_c4(i,4, :));
+  featuresMatrix_beta_c4(i, 3) = ModifiedMeanAbsValue2(train_WaveletCoefficentMatrix_c4(i,3, :));
+end
+
+%using SimpleSquareIntegral
+for i=1:1:length(train_label)
+  featuresMatrix_alpha_c3(i, 4) = SimpleSquareIntegral(train_WaveletCoefficentMatrix_c3(i,4, :));
+  featuresMatrix_beta_c3(i, 4) = SimpleSquareIntegral(train_WaveletCoefficentMatrix_c3(i,3, :));
+  featuresMatrix_alpha_c4(i, 4) = SimpleSquareIntegral(train_WaveletCoefficentMatrix_c4(i,4, :));
+  featuresMatrix_beta_c4(i, 4) = SimpleSquareIntegral(train_WaveletCoefficentMatrix_c4(i,3, :));
+end
+
+%using ZeroCrossing
 
 
 
@@ -60,13 +95,12 @@ featuresMatrix_beta_c4 = zeros(length(train_label), 6, length(train_set_c4));
 % y = rmx(x, N)
 % WL
 %
-signal = zeros(length(train_set_c3));
-N = length(train_set_c3)/2
-signal(1:N) = squeeze(train_WaveletCoefficentMatrix_c3(1,3,1:N));
-signal(N+1:length(train_set_c3)) = squeeze(train_WaveletCoefficentMatrix_c3(1,4,N+1:length(train_set_c3)));
-
-figure();
-plot(t, signal);
+% signal = zeros(length(train_set_c3));
+% N = length(train_set_c3)/2;
+% signal(1:N) = squeeze(train_WaveletCoefficentMatrix_c3(1,3,1:N));
+% signal(N+1:length(train_set_c3)) = squeeze(train_WaveletCoefficentMatrix_c3(1,4,N+1:length(train_set_c3)));
+% figure();
+% plot(t, signal);
 
 
 
