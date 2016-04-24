@@ -87,25 +87,18 @@ for i=1:1:length(train_label)
   featuresMatrix_beta_c4(i, 4) = SimpleSquareIntegral(train_WaveletCoefficentMatrix_c4(i,3, :));
 end
 
-%using ZeroCrossing
+%using featureExtraction1 <potentially will be using covariance, log-variance, autoregression>
+for i=1:1:length(train_label)
+  featuresMatrix_alpha_c3(i, 5) = featureExtraction1(train_WaveletCoefficentMatrix_c3(i,4, :));
+  featuresMatrix_beta_c3(i, 5) = featureExtraction1(train_WaveletCoefficentMatrix_c3(i,3, :));
+  featuresMatrix_alpha_c4(i, 5) = featureExtraction1(train_WaveletCoefficentMatrix_c4(i,4, :));
+  featuresMatrix_beta_c4(i, 5) = featureExtraction1(train_WaveletCoefficentMatrix_c4(i,3, :));
+end
 
-
-
-% required features RMS, WL, MMAV, SSI, ZC, SSC
-% y = rmx(x, N)
-% WL
-%
-% signal = zeros(length(train_set_c3));
-% N = length(train_set_c3)/2;
-% signal(1:N) = squeeze(train_WaveletCoefficentMatrix_c3(1,3,1:N));
-% signal(N+1:length(train_set_c3)) = squeeze(train_WaveletCoefficentMatrix_c3(1,4,N+1:length(train_set_c3)));
-% figure();
-% plot(t, signal);
-
-
-
-
-%
-
-% figure();
-% plot(t, squeeze(train_WaveletCoefficentMatrix_c3(1,4,:)));
+%adding labels
+for i=1:1:length(train_label)
+  featuresMatrix_alpha_c3(i, 6) = train_label(i);
+  featuresMatrix_beta_c3(i, 6) = train_label(i);
+  featuresMatrix_alpha_c4(i, 6) = train_label(i);
+  featuresMatrix_beta_c4(i, 6) = train_label(i);
+end
