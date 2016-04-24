@@ -89,10 +89,10 @@ end
 
 %using featureExtraction1 <potentially will be using covariance, log-variance, autoregression>
 for i=1:1:length(train_label)
-  featuresMatrix_alpha_c3(i, 5) = featureExtraction1(train_WaveletCoefficentMatrix_c3(i,4, :));
-  featuresMatrix_beta_c3(i, 5) = featureExtraction1(train_WaveletCoefficentMatrix_c3(i,3, :));
-  featuresMatrix_alpha_c4(i, 5) = featureExtraction1(train_WaveletCoefficentMatrix_c4(i,4, :));
-  featuresMatrix_beta_c4(i, 5) = featureExtraction1(train_WaveletCoefficentMatrix_c4(i,3, :));
+  featuresMatrix_alpha_c3(i, 5) = log_variance(train_WaveletCoefficentMatrix_c3(i,4, :));
+  featuresMatrix_beta_c3(i, 5) = log_variance(train_WaveletCoefficentMatrix_c3(i,3, :));
+  featuresMatrix_alpha_c4(i, 5) = log_variance(train_WaveletCoefficentMatrix_c4(i,4, :));
+  featuresMatrix_beta_c4(i, 5) = log_variance(train_WaveletCoefficentMatrix_c4(i,3, :));
 end
 
 %adding labels
