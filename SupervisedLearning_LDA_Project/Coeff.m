@@ -79,6 +79,95 @@ for i = 1:14
     avgLeftCoeff(i) = mean(leftCoeffMat(:,i));
     avgRightCoeff(i) = mean(rightCoeffMat(:,i));
 end
+avgLeftCoeff(1,15) = -1;
+avgRightCoeff(1,15) = 1;
 
-avgLeft = mean(avgLeftCoeff);
-avgRight = mean(avgRightCoeff);
+% avgLeft = mean(avgLeftCoeff);
+% avgRight = mean(avgRightCoeff);
+
+%% Scatter Matrices
+%Within Class
+siLeft = zeros(1,14);
+siRight = zeros(1,14);
+xL = []; xR = [];
+[mL, nL] = size(leftCoeffMat); %65 x 15
+[mR, nR] = size(rightCoeffMat);%66 x 15
+
+
+for n = 1:mL
+    for i = 1:(nL-1)
+   %     siLeft(n,i) = ((leftCoeffMat(:,i) - avgLeftCoeff(1,i))*((leftCoeffMat(:,i) - avgLeftCoeff(1,i))'));
+         xL(n,i) = (leftCoeffMat(n,i)-avgLeftCoeff(1,i));
+    end  %[Sik:  you dont really have to use for loops for these operations.]
+end
+xLt = xL';
+swLeft = xLt*xL;
+% swLeft(1,nL) = -1;
+% swLeft = sum(siLeft);
+
+for n = 1:mR
+    for  i = 1:(nR-1)
+        %siRight(n,i) = ((rightCoeffMat(n,i) - avgRightCoeff(1,i))*((rightCoeffMat(n,i) - avgRightCoeff(1,i))'));
+        xR(n,i) = (rightCoeffMat(n,i)-avgRightCoeff(1,i));
+        %[Sik:  you dont really have to use for loops for these operations.]
+    end
+end
+xRt = xR';
+swRight = xRt*xR;
+%swRight(1,nR) = 1;
+
+sW = swLeft + swRight;
+
+pause(10)
+%Between Class
+meanAvgLeft = sum(avgLeftCoeff(1:(nL-1)));%[Sik:  why remove last element. ]
+meanAvgRight = sum(avgRightCoeff(1:(nR-1)));
+xL = []; xR = [];
+[mL, nL] = size(avgLeftCoeff);
+[mR, nR] = size(avgRightCoeff);
+
+for i = 1:(nL-1)
+    xL(i) = avgLeftCoeff(i) - meanAvgLeft; %[Sik:  you dont really have to use for loops for these operations.]
+end
+xLt = xL';
+sbLeft = (nL-1)*(xLt*xL);
+
+for i = 1:(nR-1)
+    xR(i) = avgRightCoeff(i) - meanAvgRight; %[Sik:  you dont really have to use for loops for these operations.]
+end
+xRt = xR';
+sbRight = (nR-1)*(xRt*xR);
+
+sB = sbLeft + sbRight;
+
+
+%% Selecting the LD for feature subspace
+invSW = inv(sW);
+A = invSW*sB;
+aLeft = swLeft\sbLeft;
+aRight = swRight\sbRight;
+[V,D] = eig(A);
+for i = 1:length(D)
+    dFix(i,1) = D(i,i);
+end
+sortValues = sort(D,'descend');
+
+sortA = sort(A,'descend');
+sortLeft = sort(aLeft,'descend');
+sortRight = sort(aRight,'descend');
+%[Sik:  you didnt do anything with the sorted values ...]
+
+%% Looking at Eigenvalues and Vectors to determine features/classifiers.
+%Chose meanC3Alpha and meanC3Beta
+
+X = coeffMat(:,1:2);
+W = V(1:2,:);
+
+Y = X*W;
+leftX = leftCoeffMat(:,1:2);
+rightX = rightCoeffMat(:,1:2);
+yLeft = leftX*W;
+yRight = rightX*W;
+%[Sik:  you dont have to split your Y. Y will be the model that you will run the
+%   real data sets and perform LDA. Now as you perform LDA you will be also outputing
+%   the classifications based on your feature extractions. ]
