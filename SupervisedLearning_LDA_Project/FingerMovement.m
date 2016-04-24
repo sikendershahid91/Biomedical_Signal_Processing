@@ -102,3 +102,6 @@ for i=1:1:length(train_label)
   featuresMatrix_alpha_c4(i, 6) = train_label(i);
   featuresMatrix_beta_c4(i, 6) = train_label(i);
 end
+%--FEATURES SELECTIONS COMPLETE FOR TRAINING SELECTIONS
+
+%LDA
