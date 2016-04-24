@@ -14,7 +14,8 @@ train_label = EEG_DATA.label_train(:,:)';
 t = EEG_DATA.t(:,:)';
 t(end) = [];
 Fs = 250;
-
+df = Fs/2048;
+frequency = (-Fs/2:df:Fs/2-df)';
 
 % Normalize the training data set respect to Trials
 for i=1:1:length(train_label)
@@ -48,12 +49,29 @@ for i=1:1:length(train_label)
     train_WaveletCoefficentMatrix_c4(i,6, :) = wrcoef('a',C,L,daubechies_WT,5); %DELTA
 end
 
-featuresMatrix_alpha_c3 = zeros(length(train_label), 6, length(train_set_c3))
-featuresMatrix_beta_c3 = zeros(length(train_label), 6, length(train_set_c3))
-featuresMatrix_alpha_c4 = zeros(length(train_label), 6, length(train_set_c4))
-featuresMatrix_beta_c4 = zeros(length(train_label), 6, length(train_set_c4))
+featuresMatrix_alpha_c3 = zeros(length(train_label), 6, length(train_set_c3));
+featuresMatrix_beta_c3 = zeros(length(train_label), 6, length(train_set_c3));
+featuresMatrix_alpha_c4 = zeros(length(train_label), 6, length(train_set_c4));
+featuresMatrix_beta_c4 = zeros(length(train_label), 6, length(train_set_c4));
 
 
+
+% required features RMS, WL, MMAV, SSI, ZC, SSC
+% y = rmx(x, N)
+% WL
+%
+signal = zeros(length(train_set_c3));
+N = length(train_set_c3)/2
+signal(1:N) = squeeze(train_WaveletCoefficentMatrix_c3(1,3,1:N));
+signal(N+1:length(train_set_c3)) = squeeze(train_WaveletCoefficentMatrix_c3(1,4,N+1:length(train_set_c3)));
 
 figure();
-plot(t, squeeze(train_WaveletCoefficentMatrix_c3(1,4,:)));
+plot(t, signal);
+
+
+
+
+%
+
+% figure();
+% plot(t, squeeze(train_WaveletCoefficentMatrix_c3(1,4,:)));
