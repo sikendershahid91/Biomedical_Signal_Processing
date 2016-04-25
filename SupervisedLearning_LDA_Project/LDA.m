@@ -1,12 +1,14 @@
-function [ output_model ] = LDA( feature_matrix )
+function [ Model ] = LDA(data_matrix,  feature_matrix )
 % function: Short description
 %
 % Extended description
+
 sW = createScatterMatrixWeight(feature_matrix);
 sB = createScatterMatrixBetween(feature_matrix);
-
-
-end  % function
+eigenVector, eigenValue = sortingByEigen(sW, sB);
+weightedMatrix = Diagonalise(sB, eigenVector, eigenValue);
+Model = TransformNewSubSpace(data_matrix, weightedMatrix);
+end
 
 function [ scatter_weight ] = createScatterMatrixWeight(input_feature)
 % function: Short description
@@ -19,9 +21,9 @@ within_scatter_matrix(:,end) = input_feature(:,end);
 within_scatter_matrix = within_scatter_matrix*within_scatter_matrix';
 within_scatter_matrix(:,end) = input_feature(:,end);
 scatter_weight = within_scatter_matrix;
-end  % function
+end
 
-function [ scatter_between ] = function( input_feature)
+function [ scatter_between ] = createScatterMatrixBetween( input_feature)
 % function: Short description
 %Calculating the Between scatter matrix
 % Extended description
@@ -29,10 +31,10 @@ between_scatter_matrix = (mean(input_feature) - mean2(input_feature));
 between_scatter_matrix = length(input_feature)*between_scatter_matrix*between_scatter_matrix';
 between_scatter_matrix(:,end) = input_feature(:,end);
 scatter_between = between_scatter_matrix;
-end  % function
+end
 
 
-function [ out_matrix ] = sortingByEigen(scatter_w, scatter_b)
+function [ out_matrix_vector, out_matrix_value ] = sortingByEigen(scatter_w, scatter_b)
 % function: input of scatter-weighted Matrix and scatter-between matrix
 % calculating the eigen value and vector, the output will containe a reduced
 % matrix based on the reduced eigen vectors.
@@ -50,7 +52,8 @@ function [ out_matrix ] = sortingByEigen(scatter_w, scatter_b)
   threshold = ceil((length(eigen_values))*0.25);
   eigen_values(end-threshold:end) = [];
   eigen_vector_postions = values(eigen_vector_dictionary, mat2cell(eigen_values));
-  out_matrix = eigen_vector(cell2mat(eigen_vector_postions));
+  out_matrix_vector = eigen_vector(cell2mat(eigen_vector_postions));
+  out_matrix_value = eigen_values;
 end
 
 function [ weight_matrix ] = Diagonalise(scatter_b_matrix, eigen_vector_matrix, eigen_value_matrix)
@@ -76,4 +79,4 @@ function [ new_subspace ] = TransformNewSubSpace(data_matrix, weight_matrix)
   % calculating the dot product will produced a new subspace
 
   new_subspace = dot(data_matrix, weight_matrix);
-end  % function
+end
