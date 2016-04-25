@@ -28,7 +28,7 @@ end
 end  % function
 
 function [ scatter_between_classes] = createScatterMatrixBetween( in)
-  ~,1]=size(in(:,1:5)); %Size of in
+  [~,1]=size(in(:,1:5)); %Size of in
   classes = unique(in(:,6)); %Class vector
   totalclasses = length(classes); %Number of classes
   between_matrix_scatter = zeros(131,6); %initialize within matrix
