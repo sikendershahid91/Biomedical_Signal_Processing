@@ -28,7 +28,18 @@ end
 end  % function
 
 function [ scatter_between_classes] = createScatterMatrixBetween( in)
+  ~,1]=size(in(:,1:5)); %Size of in
+  classes = unique(in(:,6)); %Class vector
+  totalclasses = length(classes); %Number of classes
+  between_matrix_scatter = zeros(131,6); %initialize within matrix
+  meanofdata = mean(in(:,1:5)); %Mean of features overall
+  for n = 1:totalclasses
+    class_data = find( in(:,6)==classes(n)); %Get feature for each class
+    x = in(class_data,:);
 
+    m = mean(x); %mean of each class
+    x = x-repmat(m,length(class_data),1); %xi - mi
+    between_matrix = between_matrix(class_data)*(m-meanofdata)'*(mci-meanofdata)
 end
 
 function [ out_matrix ] = sortingByEigen( in )
