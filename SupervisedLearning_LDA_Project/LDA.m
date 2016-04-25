@@ -45,9 +45,10 @@ end
 end
 
 function [ out_matrix ] = sortingByEigen(scatter_w, scatter_b)
-% function: Short description
-%
-% Extended description
+% function: input of scatter-weighted Matrix and scatter-between matrix
+% calculating the eigen value and vector, the output will containe a reduced
+% matrix based on the reduced eigen vectors.
+
 [eigen_vector, eigen_values] = eig(inv(scatter_w)*scatter_b);
 eigen_values = diag(eigen_values);
 eigen_vector_location = zeros(length(eigen_values),1);
@@ -57,13 +58,14 @@ end
 eigen_values_dictionary = containers.Map(eigen_values, eigen_vector_location);
 eigen_values = sort(eigen_values, 'descend');
 max_eigen_vector = eigen_vector_dictionary(eigen_values(1));
-
-
+halfReduction = ceil((length(eigen_values))/2);
+eigen_vector(:, halfReduction:end) = [];
+out_matrix = eigen_vector;
 end  % function
 
-function [ out_subspaceY ] = TransformNewSubSpaceY( in )
-% function: Short description
-%
-% Extended description
+function [ new_subspace ] = TransformNewSubSpace(data_matrix, eigen_matrix)
+% function: Input of data_matrix whether test or train set and eigen matrix
+% calculating the dot product will produced a new subspace
 
+new_subspace = dot(data_matrix, eigen_matrix);
 end  % function
