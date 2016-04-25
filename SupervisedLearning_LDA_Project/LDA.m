@@ -58,16 +58,18 @@ function [ out_matrix ] = sortingByEigen(scatter_w, scatter_b)
     end
   eigen_values_dictionary = containers.Map(eigen_values, eigen_vector_location);
   eigen_values = sort(eigen_values, 'descend');
-  max_eigen_vector = eigen_vector_dictionary(eigen_values(1));
-  halfReduction = ceil((length(eigen_values))/2);
-  eigen_vector(:, halfReduction:end) = [];
-  out_matrix = eigen_vector;
+
+  % threshold 0.25 removal of matrix
+  threshold = ceil((length(eigen_values))*0.25);
+  eigen_values(end-threshold:end) = [];
+  eigen_vector_postions = values(eigen_vector_dictionary, mat2cell(eigen_values));
+  out_matrix = eigen_vector(cell2mat(eigen_vector_postions));
 end
 
 function [ diagnolized_matrix ] = Diagonalise(scatter_b_matrix, eigen_vector_matrix, eigen_value_matrix)
   % function:
 
-  
+
 end
 
 function [ new_subspace ] = TransformNewSubSpace(data_matrix, eigen_matrix)
