@@ -66,15 +66,27 @@ function [ out_matrix ] = sortingByEigen(scatter_w, scatter_b)
   out_matrix = eigen_vector(cell2mat(eigen_vector_postions));
 end
 
-function [ diagnolized_matrix ] = Diagonalise(scatter_b_matrix, eigen_vector_matrix, eigen_value_matrix)
+function [ weight_matrix ] = Diagonalise(scatter_b_matrix, eigen_vector_matrix, eigen_value_matrix)
   % function:
+  eigen_value_matrix = diag(eigen_value_matrix);
+  matrix_k = sqrt(inv(eigen_value_matrix)) * eigen_vector_matrix' * scatter_b_matrix ...
+           * eigen_vector_matrix * sqrt(inv(eigen_value_matrix));
+  matrix_k = (matrix_k + matrix_k') / 2;
+  [eig_vector_k, eig_value_k] = eigh(matrix_k);
+  eig_vector_k = eig_vector_k';
 
+  weight_matrix = eigen_vector_matrix' * sqrt(inv(eigen_value_matrix')) * eig_vector_k';
+  weight_matrix = weight_matrix';
 
+  eig_value_k = diag(eig_value_k);
+  [~, range] = sort(eig_value_k, 'descend');
+  weight_matrix = weight_matrix(range, :);
+  eig_value_k = eig_value_k(range);
 end
 
-function [ new_subspace ] = TransformNewSubSpace(data_matrix, eigen_matrix)
+function [ new_subspace ] = TransformNewSubSpace(data_matrix, weight_matrix)
   % function: Input of data_matrix whether test or train set and eigen matrix
   % calculating the dot product will produced a new subspace
 
-  new_subspace = dot(data_matrix, eigen_matrix);
+  new_subspace = dot(data_matrix, weight_matrix);
 end  % function
