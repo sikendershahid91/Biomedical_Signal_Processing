@@ -43,9 +43,10 @@ function [ scatter_between_classes] = createScatterMatrixBetween( in)
 end
 
 function [ out_matrix ] = sortingByEigen(scatter_w, scatter_b)
-% function: input of scatter-weighted Matrix and scatter-
-%
-% Extended description
+% function: input of scatter-weighted Matrix and scatter-between matrix
+% calculating the eigen value and vector, the output will containe a reduced
+% matrix based on the reduced eigen vectors.
+
 [eigen_vector, eigen_values] = eig(inv(scatter_w)*scatter_b);
 eigen_values = diag(eigen_values);
 eigen_vector_location = zeros(length(eigen_values),1);
@@ -60,9 +61,9 @@ eigen_vector(:, halfReduction:end) = [];
 out_matrix = eigen_vector;
 end  % function
 
-function [ out_subspaceY ] = TransformNewSubSpaceY(eigen_matrix)
-% function: Short description
-%
-% Extended description
+function [ new_subspace ] = TransformNewSubSpace(data_matrix, eigen_matrix)
+% function: Input of data_matrix whether test or train set and eigen matrix
+% calculating the dot product will produced a new subspace
 
+new_subspace = dot(data_matrix, eigen_matrix);
 end  % function
