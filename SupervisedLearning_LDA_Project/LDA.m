@@ -1,4 +1,4 @@
-function [ Model ] = LDA(data_matrix,  feature_matrix )
+function [ Model ] = LDA(feature_matrix )
 % function: Short description
 %
 % Extended description
@@ -7,7 +7,8 @@ sW = createScatterMatrixWeight(feature_matrix);
 sB = createScatterMatrixBetween(feature_matrix);
 eigenVector, eigenValue = sortingByEigen(sW, sB);
 weightedMatrix = Diagonalise(sB, eigenVector, eigenValue);
-Model = TransformNewSubSpace(data_matrix, weightedMatrix);
+% Model = TransformNewSubSpace(data_matrix, weightedMatrix);
+Model = 0; 
 end
 
 function [ scatter_weight ] = createScatterMatrixWeight(input_feature)
