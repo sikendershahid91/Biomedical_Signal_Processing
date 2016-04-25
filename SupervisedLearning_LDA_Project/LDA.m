@@ -8,41 +8,28 @@ sB = createScatterMatrixBetween(feature_matrix);
 
 end  % function
 
-function [ scatter_weight ] = createScatterMatrixWeight(input_feature, class_index )
+function [ scatter_weight ] = createScatterMatrixWeight(input_feature)
 % function: Short description
-%class_index is the sixth column of the coeiffienct matrix from the WT
-%S_i is the scatter matrix for every class
-% Extended description
-max_class = max(class_index);
-size_input = size(input_feature,2)
-total_mean = mean(input_feature)
-
+%Calculating the within scatter matrix
+%
 %computing the scatter matrix
-for i = 1:max_class
-  dx = find(class_index==i);
-  mu_mean(i,:) = mean(input_feature(dx,:),1);
-end
-[~ j] = size(input_feature(:,1:5));
-for n:1:j
-  mu_mean = mu_mean(:,n) - mean(mu_mean(:,n));
-end
-between_matrix = 0;
-%"USING MATLAB'S NUMERICAL COMPUTATIONAL SKILLS DAWG" - SIKENDER
-for i=1:max_class
-  between_matrix = between_matrix + (mu_mean(i,:)'*mu_mean(i,:));
-end
-between_matrix = (1/max_class) * between_matrix;
 
-%Computing the within scatter
-within_scatter = zeros(size(between_matrix));
-for i = 1:max_class
-  dx = find(class_index==i);
-  x = bsxfun(@minus, X(dx,:), mu_mean(i,:));
-  within_scatter = within_scatter + (x' * x);
-end
-  within_scatter = (1/max_ckass) * within_scatter;
+within_scatter_matrix = input_feature - ones(size(input_feature))*diag(mean(input_feature));
+within_scatter_matrix(:,end) = input_feature(:,end);
+within_scatter_matrix = within_scatter_matrix*within_scatter_matrix';
+within_scatter_matrix(:,end) = input_feature(:,end);
+scatter_weight = within_scatter_matrix;
 end  % function
 
+function [ scatter_between ] = function( input_feature)
+% function: Short description
+%Calculating the Between scatter matrix
+% Extended description
+between_scatter_matrix = (mean(input_feature) - mean2(input_feature));
+between_scatter_matrix = length(input_feature)*between_scatter_matrix*between_scatter_matrix';
+between_scatter_matrix(:,end) = input_feature(:,end);
+scatter_between = between_scatter_matrix;
+end  % function
 
 
 function [ out_matrix ] = sortingByEigen(scatter_w, scatter_b)
