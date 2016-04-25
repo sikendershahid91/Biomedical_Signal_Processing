@@ -8,41 +8,42 @@ sB = createScatterMatrixBetween(feature_matrix);
 
 end  % function
 
-function [ scatter_weight ] = createScatterMatrixWeight(scatter_w )
+function [ scatter_weight ] = createScatterMatrixWeight(input_feature, class_index )
 % function: Short description
+%class_index is the sixth column of the coeiffienct matrix from the WT
 %S_i is the scatter matrix for every class
 % Extended description
-[~,1]=size(scatter_w(:,1:5)); %Size of in
-classes = unique(scatter_w(:,6)); %Class vector
-totalclasses = length(classes); %Number of classes
-within_scatter = zeros(131,6); %initialize within matrix
-meanofdata = mean(scatter_w(:,1:5)); %Mean of features overall
-for n = 1:totalclasses
-  class_data = find( scatter_w(:,6)==classes(n)); %Get feature for each class
-  x = scatter_w(class_data,:);
+max_class = max(class_index);
+size_input = size(input_feature,2)
+total_mean = mean(input_feature)
 
-  m = mean(x); %mean of each class
-  x = x-repmat(m,length(class_data),1); %xi - mi
-  within_scatter = within_scatter + x' * x;
+%computing the scatter matrix
+for i = 1:max_class
+  dx = find(class_index==i);
+  mu_mean(i,:) = mean(input_feature(dx,:),1);
 end
+[~ j] = size(input_feature(:,1:5));
+for n:1:j
+  mu_mean = mu_mean(:,n) - mean(mu_mean(:,n));
+end
+between_matrix = 0;
+%"USING MATLAB'S NUMERICAL COMPUTATIONAL SKILLS DAWG" - SIKENDER
+for i=1:max_class
+  between_matrix = between_matrix + (mu_mean(i,:)'*mu_mean(i,:));
+end
+between_matrix = (1/max_class) * between_matrix;
+
+%Computing the within scatter
+within_scatter = zeros(size(between_matrix));
+for i = 1:max_class
+  dx = find(class_index==i);
+  x = bsxfun(@minus, X(dx,:), mu_mean(i,:));
+  within_scatter = within_scatter + (x' * x);
+end
+  within_scatter = (1/max_ckass) * within_scatter;
 end  % function
 
-function [ scatter_between_classes] = createScatterMatrixBetween(scatter_b)
-  [~,1]=size(scatter_b(:,1:5)); %Size of in
-  classes = unique(scatter_b(:,6)); %Class vector
 
-  totalclasses = length(classes); %Number of classes
-  between_matrix_scatter = zeros(131,6); %initialize within matrix
-  meanofdata = mean(scatter_b(:,1:5)); %Mean of features overall
-  for n = 1:totalclasses
-    class_data = find( scatter_b(:,6)==classes(n)); %Get feature for each class
-    x = scatter_b(class_data,:);
-
-    m = mean(x); %mean of each class
-    x = x-repmat(m,length(class_data),1); %xi - mi
-    between_matrix = between_matrix(class_data)*(m-meanofdata)'*(mci-meanofdata)
-end
-end
 
 function [ out_matrix ] = sortingByEigen(scatter_w, scatter_b)
 % function: input of scatter-weighted Matrix and scatter-between matrix
