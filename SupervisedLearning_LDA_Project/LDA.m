@@ -49,23 +49,29 @@ function [ out_matrix ] = sortingByEigen(scatter_w, scatter_b)
 % calculating the eigen value and vector, the output will containe a reduced
 % matrix based on the reduced eigen vectors.
 
-[eigen_vector, eigen_values] = eig(inv(scatter_w)*scatter_b);
-eigen_values = diag(eigen_values);
-eigen_vector_location = zeros(length(eigen_values),1);
-for i = 1:1:length(eigen_values)
-  eigen_vector_location(i) = i;
+  [eigen_vector, eigen_values] = eig(inv(scatter_w)*scatter_b);
+  eigen_values = diag(eigen_values);
+  eigen_vector_location = zeros(length(eigen_values),1);
+    for i = 1:1:length(eigen_values)
+      eigen_vector_location(i) = i;
+    end
+  eigen_values_dictionary = containers.Map(eigen_values, eigen_vector_location);
+  eigen_values = sort(eigen_values, 'descend');
+  max_eigen_vector = eigen_vector_dictionary(eigen_values(1));
+  halfReduction = ceil((length(eigen_values))/2);
+  eigen_vector(:, halfReduction:end) = [];
+  out_matrix = eigen_vector;
 end
-eigen_values_dictionary = containers.Map(eigen_values, eigen_vector_location);
-eigen_values = sort(eigen_values, 'descend');
-max_eigen_vector = eigen_vector_dictionary(eigen_values(1));
-halfReduction = ceil((length(eigen_values))/2);
-eigen_vector(:, halfReduction:end) = [];
-out_matrix = eigen_vector;
-end  % function
+
+function [ diagnolized_matrix ] = Diagonalise(scatter_b_matrix, eigen_vector_matrix, eigen_value_matrix)
+  % function:
+
+  
+end
 
 function [ new_subspace ] = TransformNewSubSpace(data_matrix, eigen_matrix)
-% function: Input of data_matrix whether test or train set and eigen matrix
-% calculating the dot product will produced a new subspace
+  % function: Input of data_matrix whether test or train set and eigen matrix
+  % calculating the dot product will produced a new subspace
 
-new_subspace = dot(data_matrix, eigen_matrix);
+  new_subspace = dot(data_matrix, eigen_matrix);
 end  % function
