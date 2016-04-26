@@ -14,11 +14,14 @@ train_label = EEG_DATA.label_train(:,:)';
 t = EEG_DATA.t(:,:)';
 t(end) = [];
 
-
 % Normalize the training data set respect to Trials
 for i=1:1:length(train_label)
   train_set_c3(i,:) = (train_set_c3(i,:) - min(train_set_c3(i,:))) / (max(train_set_c3(i,:)) - min(train_set_c3(i,:)));
   train_set_c4(i,:) = (train_set_c4(i,:) - min(train_set_c4(i,:))) / (max(train_set_c4(i,:)) - min(train_set_c4(i,:)));
 end
 
-T = wpdec(X,N,'wname',E,P);
+
+WavePacketTreeC3 = wpdec(train_set_c3,length(train_set_c3),'coif5',E,P);
+WavePacketTreeC4 = wpdec(train_set_c4,length(train_set_c3),'coif5',E,P);
+
+plot(WavePacketTreeC3);
