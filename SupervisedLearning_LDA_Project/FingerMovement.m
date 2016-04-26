@@ -13,9 +13,7 @@ test_label = EEG_DATA.label_test(:,:)';
 train_label = EEG_DATA.label_train(:,:)';
 t = EEG_DATA.t(:,:)';
 t(end) = [];
-Fs = 250;
-df = Fs/2048;
-frequency = (-Fs/2:df:Fs/2-df)';
+
 
 % Normalize the training data set respect to Trials
 for i=1:1:length(train_label)
@@ -95,14 +93,13 @@ for i=1:1:length(train_label)
   featuresMatrix_beta_c4(i, 5) = log_variance(train_WaveletCoefficentMatrix_c4(i,3, :));
 end
 
+% combining segments
+feature_matrix_c3 = horzcat(featuresMatrix_alpha_c3,featuresMatrix_beta_c3,train_label');
+feature_matrix_c4 = horzcat(featuresMatrix_alpha_c4,featuresMatrix_beta_c4,train_label');
+
 %adding labels
-for i=1:1:length(train_label)
-  featuresMatrix_alpha_c3(i, 6) = train_label(i);
-  featuresMatrix_beta_c3(i, 6) = train_label(i);
-  featuresMatrix_alpha_c4(i, 6) = train_label(i);
-  featuresMatrix_beta_c4(i, 6) = train_label(i);
-end
+[a,b,c] = lda2(feature_matrix_c3, 13);
+
 %--FEATURES SELECTIONS COMPLETE FOR TRAINING SELECTIONS
 % using LDA
-model_alpha_c3 = LDA(featuresMatrix_alpha_c3);
 %LDA
