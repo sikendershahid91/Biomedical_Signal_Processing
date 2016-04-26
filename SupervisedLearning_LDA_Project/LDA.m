@@ -8,7 +8,7 @@ sB = createScatterMatrixBetween(feature_matrix);
 eigenVector, eigenValue = sortingByEigen(sW, sB);
 weightedMatrix = Diagonalise(sB, eigenVector, eigenValue);
 % Model = TransformNewSubSpace(data_matrix, weightedMatrix);
-Model = 0; 
+Model = 0;
 end
 
 function [ scatter_weight ] = createScatterMatrixWeight(input_feature)
@@ -18,9 +18,9 @@ function [ scatter_weight ] = createScatterMatrixWeight(input_feature)
 %computing the scatter matrix
 
 within_scatter_matrix = input_feature - ones(size(input_feature))*diag(mean(input_feature));
-within_scatter_matrix(:,end) = input_feature(:,end);
+% within_scatter_matrix(:,end) = input_feature(:,end);
 within_scatter_matrix = within_scatter_matrix*within_scatter_matrix';
-within_scatter_matrix(:,end) = input_feature(:,end);
+% within_scatter_matrix(:,end) = input_feature(:,end);
 scatter_weight = within_scatter_matrix;
 end
 
@@ -30,7 +30,7 @@ function [ scatter_between ] = createScatterMatrixBetween( input_feature)
 % Extended description
 between_scatter_matrix = (mean(input_feature) - mean2(input_feature));
 between_scatter_matrix = length(input_feature)*between_scatter_matrix*between_scatter_matrix';
-between_scatter_matrix(:,end) = input_feature(:,end);
+% between_scatter_matrix(:,end) = input_feature(:,end);
 scatter_between = between_scatter_matrix;
 end
 
