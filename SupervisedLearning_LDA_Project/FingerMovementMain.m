@@ -20,14 +20,17 @@ for i=1:1:length(train_label)
   train_set_c4(i,:) = (train_set_c4(i,:) - min(train_set_c4(i,:))) / (max(train_set_c4(i,:)) - min(train_set_c4(i,:)));
 end
 
+
+% Filter 8Hz - 30Hz
 [B,A] = butter(8,.3,'low');
 filter_c3=filtfilt(B,A,train_set_c3);
 [C,D] = butter(8,.08,'high');
 filter_c4=filtfilt(C,D,train_set_c4);
 
+% Wavelet Packet Decomposition
+WavePacketTreeC3 = wpdec(train_set_c3,length(train_set_c3),'coif5');
+WavePacketTreeC4 = wpdec(train_set_c4,length(train_set_c3),'coif5');
 
-
-WavePacketTreeC3 = wpdec(train_set_c3,length(train_set_c3),'coif5',E,P);
-WavePacketTreeC4 = wpdec(train_set_c4,length(train_set_c3),'coif5',E,P);
-
-plot(WavePacketTreeC3);
+% NodeTraversal
+N = depo2ind(2, [2, 3]);
+WavePacketTreeC3Coeff = wpcoef(WavePacketTreeC3, N);
