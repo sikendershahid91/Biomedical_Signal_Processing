@@ -5,7 +5,7 @@ function [ Model ] = LDA(feature_matrix )
 
 sW = createScatterMatrixWeight(feature_matrix);
 sB = createScatterMatrixBetween(feature_matrix);
-combinedMatrix = CombineScatterMatrix(sW, sB);
+combinedMatrix = CombineScatterMatrix(sW, sB, feature_matrix);
 [eigenVector, eigenValue] = sortingByEigen(combinedMatrix);
 weightedMatrix = Diagonalise(sB, eigenVector, eigenValue);
 % Model = TransformNewSubSpace(data_matrix, weightedMatrix);
@@ -33,7 +33,8 @@ scatter_between = between_scatter_matrix;
 end
 
 function [ combined_matrix ] = CombineScatterMatrix( scatter_w, scatter_b, input_feature)
-combined_matrix =inv(scatter_w)*scatter_b;
+scatter_w = inv(scatter_w);
+combined_matrix = scatter_w*scatter_b;
 combined_matrix(:,end) = input_feature(:,end);
 end  % function
 
@@ -41,7 +42,7 @@ function [ out_matrix_vector, out_matrix_value ] = sortingByEigen(combined_matri
 % function: input of scatter-weighted Matrix and scatter-between matrix
 % calculating the eigen value and vector, the output will containe a reduced
 % matrix based on the reduced eigen vectors.
-  [eigen_vector, eigen_values] = eig(inv(scatter_w)*scatter_b);
+  [eigen_vector, eigen_values] = eig(combined_matrix);
   eigen_values = diag(eigen_values);
   eigen_vector_location = zeros(length(eigen_values),1);
     for i = 1:1:length(eigen_values)
