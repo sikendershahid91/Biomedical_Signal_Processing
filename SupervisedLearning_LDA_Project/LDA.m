@@ -28,13 +28,12 @@ function [ scatter_between ] = createScatterMatrixBetween(input_feature)
 %Calculating the Between scatter matrix
 % Extended description
 between_scatter_matrix = (mean(input_feature) - mean2(input_feature));
-between_scatter_matrix = length(input_feature)*between_scatter_matrix*between_scatter_matrix';
+between_scatter_matrix = length(input_feature)*(between_scatter_matrix*between_scatter_matrix');
 scatter_between = between_scatter_matrix;
 end
 
 function [ combined_matrix ] = CombineScatterMatrix( scatter_w, scatter_b, input_feature)
-scatter_w = inv(scatter_w);
-combined_matrix = scatter_w*scatter_b;
+combined_matrix = scatter_b/scatter_w;
 combined_matrix(:,end) = input_feature(:,end);
 end  % function
 
