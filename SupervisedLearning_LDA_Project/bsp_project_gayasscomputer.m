@@ -103,8 +103,23 @@ for i=1:1:length(train_label)
 end
 
 % combining segments
-feature_matrix_c3 = horzcat(featuresMatrix_alpha_c3,featuresMatrix_beta_c3);
-feature_matrix_c4 = horzcat(featuresMatrix_alpha_c4,featuresMatrix_beta_c4);
+feature_matrix_c3 = horzcat(featuresMatrix_alpha_c3,featuresMatrix_beta_c3, train_label);
+feature_matrix_c4 = horzcat(featuresMatrix_alpha_c4,featuresMatrix_beta_c4, train_label);
+
+% arrange based on classes (1 then -1) - preparation for LDA 
+[train_label, decending_order]=sort(train_label,'descend');
+feature_matrix_c3=feature_matrix_c3(:,decending_order);
+feature_matrix_c4=feature_matrix_c4(:,decending_order);
+
+% removal of repeated values 
+feature_matrix_c3 = unique(feature_matrix_c3, 'rows');
+feature_matrix_c4 = unique(feature_matrix_c4, 'rows');
+train_label = (:, end);
+feature_matrix_c3(:, end) = [];
+feature_matrix_c4(:, end) = [];
+
+%%%% have the lengths of the feature matrix shorted? 
+
 
 % clear workspace
 clearvars -except 	feature_matrix_c3 ...
@@ -117,7 +132,11 @@ clearvars -except 	feature_matrix_c3 ...
 					test_set_c4 ...
 
 % linear discriminant analysis 
-% obj = fitcdiscr(feature_matrix_c3,train_label,'DiscrimType','linear');
-% save('obj.mat','obj');
-load('obj.mat');
-% [label,score,cost] = predict(obj,feature_matrix_c3); 
+c3ObjLDA = fitcdiscr(feature_matrix_c3,train_label,'DiscrimType','linear');
+c4ObjLDA = fitcdiscr(feature_matrix_c4,train_label,'DiscrimType','linear');
+mean_feature_matrix_c3 = mean(feature_matrix_c3);
+mean_feature_matrix_c4 = mean(feature_matrix_c4);
+c3_class = predict(c3ObjLDA, mean_feature_matrix_c3);
+c4_class = predict(c4ObjLDA, mean_feature_matrix_c4);
+
+%%%% what does c3_class and c4_class say?
