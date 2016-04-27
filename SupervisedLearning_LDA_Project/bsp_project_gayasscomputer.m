@@ -1,7 +1,7 @@
 clc; clear;
 EEG_DATA = load('Sbj2_Finger_Movement_EEG_All_Labels.mat');
 
-% Seting up variables. Transposing the dataset. 
+% Seting up variables. Transposing the dataset.
 % Fs=250Hz; Data was recorded starting 3sec before the onset of the movement.
 % eeg=[Samples x Trials x Channel]; Ch1=C3, Ch2=C4; LeftFinger=-1, RightFinger=1;
 
@@ -24,7 +24,7 @@ filter_c3=filtfilt(B,A,train_set_c3);
 [C,D] = butter(8,.08,'high');
 filter_c4=filtfilt(C,D,train_set_c3);
 
-% Filter 8Hz - 30Hz for c4 set 
+% Filter 8Hz - 30Hz for c4 set
 [B,A] = butter(8,.3,'low');
 filter_c3=filtfilt(B,A,train_set_c4);
 [C,D] = butter(8,.08,'high');
@@ -116,8 +116,20 @@ clearvars -except 	feature_matrix_c3 ...
 					test_set_c3 ...
 					test_set_c4 ...
 
-% linear discriminant analysis 
-% obj = fitcdiscr(feature_matrix_c3,train_label,'DiscrimType','linear');
-% save('obj.mat','obj');
-load('obj.mat');
-% [label,score,cost] = predict(obj,feature_matrix_c3); 
+% linear discriminant analysis
+obj = fitcdiscr(feature_matrix_c3,train_label,'DiscrimType','linear');
+save('obj.mat','obj');
+PL = feature_matrix_c3(:,1);
+PW = feature_matrix_c3(:,2);
+h1 = gscatter(PL,PW,train_set_c3,'krb','ov',[],'off');
+h1(1).LineWidth = 2;
+h1(2).LineWidth = 2;
+h1(3).LineWidth = 2;
+
+h2 = gscatter(feature_matrix_c3(:,3),feature_matrix_c3(:,4),train_set_c3,'krb','ov',[],'off');
+h2(1).LineWidth = 2;
+h2(2).LineWidth = 2;
+h2(3).LineWidth = 2;
+
+
+%[label,score,cost] = predict(obj,feature_matrix_c3);
