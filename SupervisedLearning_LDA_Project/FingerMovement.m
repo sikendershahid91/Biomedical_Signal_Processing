@@ -16,10 +16,14 @@ t(end) = [];
 
 
 % Normalize the training data set respect to Trials
-for i=1:1:length(train_label)
-  train_set_c3(i,:) = (train_set_c3(i,:) - min(train_set_c3(i,:))) / (max(train_set_c3(i,:)) - min(train_set_c3(i,:)));
-  train_set_c4(i,:) = (train_set_c4(i,:) - min(train_set_c4(i,:))) / (max(train_set_c4(i,:)) - min(train_set_c4(i,:)));
-end
+train_set_c3 = normc(train_set_c3);
+train_set_c4 = normc(train_set_c4);
+
+% Filter 8Hz - 30Hz
+[B,A] = butter(8,.3,'low');
+filter_c3=filtfilt(B,A,train_set_c3);
+[C,D] = butter(8,.08,'high');
+filter_c4=filtfilt(C,D,train_set_c4);
 
 % wavelet Transform (WT)- extract the coeiffienct from train_set for each trial
 daubechies_WT = 'db5';
@@ -98,7 +102,8 @@ feature_matrix_c3 = horzcat(featuresMatrix_alpha_c3,featuresMatrix_beta_c3,train
 feature_matrix_c4 = horzcat(featuresMatrix_alpha_c4,featuresMatrix_beta_c4,train_label');
 
 %adding labels
-[a,b,c] = lda2(feature_matrix_c3, 13);
+b = LDA1(train_set_c3, feature_matrix_c3);
+b1= LDA1(train_set_c4, feature_matrix_c4);
 
 %--FEATURES SELECTIONS COMPLETE FOR TRAINING SELECTIONS
 % using LDA
