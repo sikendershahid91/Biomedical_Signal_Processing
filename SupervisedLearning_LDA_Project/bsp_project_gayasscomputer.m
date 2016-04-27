@@ -118,3 +118,4 @@ clearvars -except 	feature_matrix_c3 ...
 
 % linear discriminant analysis 
 obj = fitcdiscr(feature_matrix_c3,train_label,'DiscrimType','linear');
+save('obj.mat','obj');
