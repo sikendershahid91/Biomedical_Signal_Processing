@@ -32,5 +32,4 @@ function [projected_matrix, eigen_vector, eigen_value] = LDA(data_matrix, featur
     eigen_vector=eigen_vector(:,decending_order);
 
     projected_matrix=data_matrix*eigen_vector;
-
 end

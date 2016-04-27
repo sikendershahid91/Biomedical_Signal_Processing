@@ -1,7 +1,7 @@
 clc; clear;
 EEG_DATA = load('Sbj2_Finger_Movement_EEG_All_Labels.mat');
 
-% Seting up variables.
+% Seting up variables. Transposing the dataset. 
 % Fs=250Hz; Data was recorded starting 3sec before the onset of the movement.
 % eeg=[Samples x Trials x Channel]; Ch1=C3, Ch2=C4; LeftFinger=-1, RightFinger=1;
 
@@ -14,14 +14,19 @@ train_label = EEG_DATA.label_train(:,:)';
 t = EEG_DATA.t(:,:)';
 t(end) = [];
 
-
 % Normalize the training data set respect to Trials
 train_set_c3 = normc(train_set_c3);
 train_set_c4 = normc(train_set_c4);
 
-% Filter 8Hz - 30Hz
+% Filter 8Hz - 30Hz for c3 set
 [B,A] = butter(8,.3,'low');
 filter_c3=filtfilt(B,A,train_set_c3);
+[C,D] = butter(8,.08,'high');
+filter_c4=filtfilt(C,D,train_set_c3);
+
+% Filter 8Hz - 30Hz for c4 set 
+[B,A] = butter(8,.3,'low');
+filter_c3=filtfilt(B,A,train_set_c4);
 [C,D] = butter(8,.08,'high');
 filter_c4=filtfilt(C,D,train_set_c4);
 
@@ -102,8 +107,8 @@ feature_matrix_c3 = horzcat(featuresMatrix_alpha_c3,featuresMatrix_beta_c3,train
 feature_matrix_c4 = horzcat(featuresMatrix_alpha_c4,featuresMatrix_beta_c4,train_label');
 
 %adding labels
-b = LDA1(train_set_c3, feature_matrix_c3);
-b1= LDA1(train_set_c4, feature_matrix_c4);
+% b = LDA1(train_set_c3, feature_matrix_c3);
+% b1= LDA1(train_set_c4, feature_matrix_c4);
 
 %--FEATURES SELECTIONS COMPLETE FOR TRAINING SELECTIONS
 % using LDA
