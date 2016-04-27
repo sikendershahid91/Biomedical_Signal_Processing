@@ -25,8 +25,8 @@ filter_c3=filtfilt(B,A,train_set_c3);
 filter_c4=filtfilt(C,D,train_set_c4);
 
 % Wavelet Packet Decomposition
-WavePacketTreeC3 = wpdec(train_set_c3,4,'coif5');
-WavePacketTreeC4 = wpdec(train_set_c4,4,'coif5');
+WavePacketTreeC3 = wpdec(train_set_c3,4,'db5');
+WavePacketTreeC4 = wpdec(train_set_c4,4,'db5');
 figure();
 plot(WavePacketTreeC3);
 % NodeTraversal
