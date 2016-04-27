@@ -57,10 +57,10 @@ for i=1:1:length(train_label)
 end
 
 %Creating feature extraction matrix
-featuresMatrix_alpha_c3 = zeros(length(train_label), 6);
-featuresMatrix_beta_c3 = zeros(length(train_label), 6);
-featuresMatrix_alpha_c4 = zeros(length(train_label), 6);
-featuresMatrix_beta_c4 = zeros(length(train_label), 6);
+featuresMatrix_alpha_c3 = zeros(length(train_label), 5);
+featuresMatrix_beta_c3 = zeros(length(train_label), 5);
+featuresMatrix_alpha_c4 = zeros(length(train_label), 5);
+featuresMatrix_beta_c4 = zeros(length(train_label), 5);
 
 %RMS using y = rms(x, N)
 for i=1:1:length(train_label)
