@@ -111,10 +111,14 @@ feature_matrix_c4 = horzcat(featuresMatrix_alpha_c4,featuresMatrix_beta_c4, trai
 feature_matrix_c3=feature_matrix_c3(:,decending_order);
 feature_matrix_c4=feature_matrix_c4(:,decending_order);
 
+if(feature_matrix_c3(:,end) ~= feature_matrix_c4(:,end))
+  error('labels are not equal');
+end
+
 % removal of repeated values 
 feature_matrix_c3 = unique(feature_matrix_c3, 'rows');
 feature_matrix_c4 = unique(feature_matrix_c4, 'rows');
-train_label = (:, end);
+train_label = feature_matrix_c3(:, end);
 feature_matrix_c3(:, end) = [];
 feature_matrix_c4(:, end) = [];
 
