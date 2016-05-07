@@ -1,7 +1,7 @@
 
 function [projected_matrix, eigen_vector, eigen_value] = LDA(data_matrix, feature_matrix)
 
-    Classes=unique(feature_matrix, end)';
+    Classes=unique(feature_matrix)';
     k=numel(Classes);
     n=zeros(k,1);
     C=cell(k,1);
